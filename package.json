@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node lib/index.js",
+    "start": "tsc && node build/src/index.js",
     "dev": "nodemon --watch \"src/**/*.ts\" --exec \"node --loader ts-node/esm\" src/index.ts"
   },
   "keywords": [],
