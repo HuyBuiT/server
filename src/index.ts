@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { createCollection, getBalance, getCollection, mintToken } from './service/index.js';
+import { createCollection, getBalance, getCollection, mintToken} from './service/index.js';
 
 const app = express();
 const port = 3000;
@@ -56,16 +56,19 @@ app.get('/api/create-collection', async (req: Request, res: any) => {
     }
 });
 
-app.get('/api/mint-token', async (req: Request, res: any) => {
-    const address = req.query.address as string;
-    const collectionId = req.query.collectionId;
+app.post('/api/mint-token', async (req: Request, res: any) => {
+    const address = req.body.address as string;
+    const name = req.body.name;
+    const description = req.body.description;
+    const ipfsUrl = req.body.ipfsUrl;
+    const type = req.body.type;
+    const collectionId = req.body.collectionId;
     if (!address) {
         return res.status(400).json({ error: 'Address is required' });
     }
-
     try {
-        const collection = await mintToken(address,Number(collectionId));
-        return res.json({ address, collection });
+        const nft = await mintToken(name, description,ipfsUrl, type, address, Number(collectionId));
+        return res.json({ address, nft });
     } catch (error) {
         console.error('Error mint token:', error);
         return res.status(500).json({ error: 'Failed to mint token' });
