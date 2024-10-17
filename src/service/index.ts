@@ -73,7 +73,8 @@ export async function mintToken(name: string, description: string, ipfsUrl: stri
     const result = await sdk.token.mintNFTs({
       collectionId,
       tokens: [
-        { data: { name, image: ipfsUrl }, properties: [{ key: "Description", value: description }, { key: "Type", value: type }] },
+        { data: { name, image: ipfsUrl, attributes:[{trait_type: "test", value:"worked" }] },
+         properties: [{ key: "Description", value: description }, { key: "Type", value: type }], },
       ]
     });
     const [nft1] = result.result;
