@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { createCollection, getBalance, getCollection, mintToken} from './service/index.js';
+import { createCollection, getBalance, getCollection, getTokens, mintToken} from './service/index.js';
 
 const app = express();
 const port = 3000;
@@ -72,6 +72,17 @@ app.post('/api/mint-token', async (req: Request, res: any) => {
     } catch (error) {
         console.error('Error mint token:', error);
         return res.status(500).json({ error: 'Failed to mint token' });
+    }
+});
+
+app.get('/api/get-tokens', async (req: Request, res: any) => {
+    const collectionId = req.query.collectionId;
+    try {
+        const tokens = await getTokens(Number(collectionId));
+        return res.json({ tokens});
+    } catch (error) {
+        console.error('Error get list token:', error);
+        return res.status(500).json({ error: 'Failed to get list token' });
     }
 });
 // Start server

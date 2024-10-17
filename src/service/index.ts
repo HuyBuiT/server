@@ -90,7 +90,43 @@ export async function mintToken(name: string, description: string, ipfsUrl: stri
   }
 }
 
-export async function getToken () {
-  // const result = await sdk.token.get({collectionId: 4050, tokenId: 9});
-  // return result;
+export async function getTokens (collectionId: number) {
+  const nft = [];
+  let index = 1;
+  let isNFTExist = await checkNFTExist(index, collectionId);
+  while (isNFTExist) {
+    const result = await sdk.token.get({collectionId, tokenId: index});
+    nft.push(result);
+    index++;
+    isNFTExist = await checkNFTExist(index, collectionId);
+  }
+
+  return nft;
+}
+
+async function checkNFTExist(tokenId:number, collectionId: number) {
+  try {
+    // Use fetch to call the API
+    const response = await fetch(`https://rest.unique.network/opal/v1/tokens/exists?collectionId=${collectionId}&tokenId=${tokenId}`, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json'
+      }
+    });
+
+    // Check if the response is ok (status code 200-299)
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    // Parse the response as JSON
+    const result = await response.json();
+
+    // Assuming you want to return this result
+    return result.isExists
+
+  } catch (error) {
+    console.error("Error fetching tokens:", error);
+    return null;
+  }
 }
